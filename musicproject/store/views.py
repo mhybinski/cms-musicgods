@@ -111,7 +111,9 @@ def add_news(request):
     if request.method == "POST":
         form = AddNewsForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            newsik = form.save(commit=False)
+            newsik.author = request.user
+            newsik.save()
             return redirect('home')
     else:
         form = AddNewsForm()
@@ -122,7 +124,9 @@ def add_album(request):
     if request.method == "POST":
         form = AddAlbumForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            albumik = form.save(commit=False)
+            albumik.review_author = request.user
+            albumik.save()
             return redirect('albums_list')
     else:
         form = AddAlbumForm()
