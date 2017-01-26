@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+<div class="container-fluid">
+{% block body %}
+
+     <h1>Albumy</h1>
+    {% if user.is_staff %}
+    <div class="check">
+    <a href="{% url 'add_album' %}" class="btn btn-success">Add albums</a></div>
+    {% endif %}
+<div class = "row">
+    {% for album in albums %}
+   <div class = "col-md-2">
+      <div class = "thumbnail">
+         <img src = "media/{{ album.cover }}" alt = "Place for cover" width="300" height="300">
+
+      <div class = "caption">
+          <h3>{{ album.title }}</h3>
+          <b>{{ album.artist }}</b>
+          <h4>{{ album.released_date }}</h4>
+          <p> Rate:
+
+
+                {% with ''|center:album.rating as range %}
+                {% for _ in range %}
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b4/Nautical_star.svg" width="25px" height="25px"/>
+                {% endfor %}
+                {% endwith %}
+
+
+         </p>
+          <p>
+            <a href = "{% url "album-detail" album.slug %}" class = "btn btn-info" role = "button">
+               Read more...
+            </a>
+         </p>
+      </div>
+      </div>
+   </div>
+{% endfor %}
+
+{% endblock %}
+</div></div>

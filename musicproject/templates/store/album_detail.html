@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+<div class="container-fluid">
+{% block body %}
+
+<div class="row">
+   <div class="check">
+    {% if user.is_staff %}
+        <a class="btn btn-default" href="{% url 'edit_album' slug=album.slug %}"><span class="glyphicon glyphicon-pencil"></span>Edit album</a>
+        <a class="btn btn-default" href="{% url 'delete_album' slug=album.slug %}"><span class="glyphicon glyphicon-remove"></span>Delete album</a>
+    {% endif %}
+    </div>
+    <div class="col-md-4">
+        <img class="img-responsive" src = "../../media/{{ album.cover }}" alt = "Place for cover" width="300" height="300"/>
+        <h4>Artist: {{ album.artist }}</h4>
+        <h4>Released Date: {{ album.released_date }}</h4>
+        <h4>Genre: {{ album.genre }}</h4>
+        <h4>Length: {{ album.length }}</h4>
+        <h4>Producer: {{ album.producer }}</h4>
+        <h4>
+        </h4>
+    </div>
+
+
+    <div class="col-md-6">
+
+        <h1>{{ album.title }}</h1>
+        <h4>Review author: {{ album.review_author }}</h4>
+        <h4>Rate:
+            {% with ''|center:album.rating as range %}
+                {% for _ in range %}
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b4/Nautical_star.svg" width="25px" height="25px"/>
+                {% endfor %}
+                {% endwith %}</h4>
+        <p>{{ album.review|safe}}</p></div></div>
+
+    <div class="row">
+    <div class="col-md-6 col-centered">
+    {% if user.is_authenticated %}
+    <p align="right"><a class="btn btn-info" href="{% url 'add_comment_to_album' slug=album.slug %}">Add comment</a></p>
+    {% endif %}
+     <hr>
+    {% for comment in album.comments.all %}
+        {% if user.is_superuser or comment.approved_comment %}
+        <div class="comment">
+            <div class="date">Date: {{ comment.created_date }}
+                {% if not comment.approved_comment %}
+                    <a class="btn btn-default" href="{% url 'album_comment_remove' pk=comment.pk %}"><span class="glyphicon glyphicon-remove"></span></a>
+                    <a class="btn btn-default" href="{% url 'album_comment_approve' pk=comment.pk %}"><span class="glyphicon glyphicon-ok"></span></a>
+                {% endif %}
+            </div>
+            <strong>User: {{ comment.author }}</strong>
+            <p> <strong>Rate: </strong>
+                {% with ''|center:comment.rating as range %}
+                {% for _ in range %}
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/b/b4/Nautical_star.svg" width="15px" height="15px"/>
+                {% endfor %}
+                {% endwith %}
+            </p>
+            <p>{{ comment.text|linebreaks }}</p><hr>
+        </div>
+        {% endif %}
+    {% empty %}
+        <p>No comments here yet :(</p>
+    {% endfor %}
+    </div><div class="col-md-4"/></div>
+{% endblock %}
+</div>
+
+
+

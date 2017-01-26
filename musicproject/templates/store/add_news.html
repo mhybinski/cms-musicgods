@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block body %}
+    <h1>Add News</h1>
+    <form method="POST" enctype="multipart/form-data">{% csrf_token %}
+        {{ form.media }}{{ form.as_p }}
+        <button type="submit" class="save btn btn-default">Send</button>
+    </form>
+{% endblock %}
